@@ -1,0 +1,3 @@
+Pablo Sautúa: BIENVENIDO AL JUEGO DE LA BALLENA AZUL
+Desafío 1: digale a su esposa "Ballena Azul"
+Fin del juego, estás muerto.

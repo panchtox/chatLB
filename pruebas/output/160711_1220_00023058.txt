@@ -1,0 +1,1 @@
+Pablo Sautúa: Dado q las botas no tienen talle tan preciso como las zapatillas estoy estimando entre 1 y 2 talles mas segun da por modelo (hombre, mujer, niña y niño)
