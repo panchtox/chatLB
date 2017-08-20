@@ -1,1 +1,0 @@
-franaf: Fabián, tengo un CPU que funciona y está bueno, pero creo que la placa de red era integrada y no funcionaba. Sirve?

@@ -1,7 +1,0 @@
-Diego Segovia: *URGENTE*
-A los correos electrónicos está llegando una citación a interrogatorio con logo de Ministerio del Interior, con número de expediente y todo. Al igual que está llegando un correo del cicpc con logo de la fiscalía y número de caso. Al abrir el link, un hacker obtiene información  personal. Ojalá puedan rotar este aviso y prevenir al mayor número de personas posible.
-MÁNDASELO  A  LOS GRUPOS DE AMIGOS.
- *URGENTE*
- NO ABRAN UN CORREO DE LA SIGUIENTE DIRECCION policia@gobierno.ve o asesorjuridico@cicpc.gov.org
-El correo en cuestion contiene un troyano que captura las claves y contraseñas de banca online, correos, etc.. Proviene de una pagina de Brasil. 
- REENVÍALO PARA MAYOR SEGURIDAD

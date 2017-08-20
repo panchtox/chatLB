@@ -1,1 +1,0 @@
-Mario Ghersi: Ahora se requiere unas pilas CR2032 para que el reloj les quede en hora. El tema no es el costo sino caminar para conseguirlas.
