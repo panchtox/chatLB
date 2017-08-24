@@ -68,7 +68,7 @@ foreach ($chat_posts_pre as $key => $value) {
 
 			var viewportWidth  = document.documentElement.clientWidth
 				,viewportHeight = document.documentElement.clientHeight;
-			var h=viewportHeight*0.35, w=viewportWidth*0.98, margin=30;
+			var h=viewportHeight*0.45, w=viewportWidth*0.98, margin=30;
 			var tooltipHeight=viewportHeight/1.8,tooltipWidth=viewportWidth/3;
 
 			timeline('#chart',nested_data,w,h);
