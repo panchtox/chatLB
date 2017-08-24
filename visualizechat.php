@@ -26,7 +26,7 @@ foreach ($chat_posts_pre as $key => $value) {
 	<head>
 		<title>Bolumetricas LG</title>
 		<meta charset="UTF-8">
-		<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link href="./styles/bootstrap.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="./styles/lastHundred.css"/>
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<script src="//code.jquery.com/jquery-2.0.3.min.js" type="text/javascript"></script>
@@ -69,7 +69,7 @@ foreach ($chat_posts_pre as $key => $value) {
 			var viewportWidth  = document.documentElement.clientWidth
 				,viewportHeight = document.documentElement.clientHeight;
 			var h=viewportHeight*0.35, w=viewportWidth*0.98, margin=30;
-			var tooltipHeight=viewportHeight/1.5,tooltipWidth=viewportWidth/3;
+			var tooltipHeight=viewportHeight/1.8,tooltipWidth=viewportWidth/3;
 
 			timeline('#chart',nested_data,w,h);
 
@@ -141,7 +141,7 @@ foreach ($chat_posts_pre as $key => $value) {
 					.style("max-height",tooltipHeight+"px")
 					.style("width",tooltipWidth+"px")
 					.classed("hidden", false);
-				d3.select("#little").text(d3.select(this).attr('id').substr(1,10)+": "+d3.select(this).attr('count')+" posteos");
+				d3.select("#little").text(d3.select(this).attr('id').substr(1,15)+": "+d3.select(this).attr('count')+" posteos");
 				d3.select("#tooltip").selectAll("div")
 					.remove();
 				d3.select("#tooltip").selectAll("div")
@@ -233,64 +233,3 @@ foreach ($chat_posts_pre as $key => $value) {
 
 		}
 		</script>
-
-	<style type="text/css">
-		.yaxis path,.yaxis line,.xaxis path, .xaxis line {
-			fill: none;
-			shape-rendering: crispedges;
-			stroke: #FEBD17;
-		}
-		.yaxis text,.xaxis text {
-			font-family: sans-serif;
-			font-size: 8px;
-			stroke:#7a7a7a;
-		}
-		body {
-			background: none repeat scroll 0 0 #222222;
-			color: #FFFFFF;
-			font-family: "Avenir Next",Avenir,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-			line-height: 1.6;
-			text-align: center;
-		}
-
-		#tooltip.hidden {
-			display: none;
-		}
-
-		#tooltip p {
-			margin: 0;
-			font-family: sans-serif;
-			font-size: 12px;
-			line-height: 20px;
-		}
-
-		#tooltip {
-			position: absolute;
-			height: auto;
-			padding: 0px 0px 5px 0px;
-			background-color: #f0f0f0;
-			-webkit-border-radius: 10px;
-			-moz-border-radius: 10px;
-			/*border-radius: 10px;*/
-			-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-			-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-			box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-			/*pointer-events: none;*/
-			opacity: 0.8;
-			overflow: auto;
-		}
-
-		#little {
-			text-align: left;
-			font-size: 0.8em;
-			background-color: #8e8e8e;
-		}
-
-		.tuitText {
-			color: black;
-			font-size: 0.8em;
-			text-align: left;
-			margin: 0px 0px 1px 0px;
-			background-color: white;
-		}
-		</style>
