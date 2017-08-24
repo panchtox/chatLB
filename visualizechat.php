@@ -19,18 +19,19 @@ foreach ($chat_posts_pre as $key => $value) {
 	$chat_posts[$key]['author']=$post_parts[0];
 	$chat_posts[$key]['content']=$post_parts[1];
 }
+// print_r($chat_posts);
 ?>
 <!doctype html>
 <html>
 	<head>
-		<title>Twitter user history</title>
+		<title>Bolumetricas LG</title>
 		<meta charset="UTF-8">
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="./styles/lastHundred.css"/>
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
-		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-		<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+		<script src="//code.jquery.com/jquery-2.0.3.min.js" type="text/javascript"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+		<script src="./lib/esimakin-twbs-pagination-9b6d211/jquery.twbsPagination.js" type="text/javascript"></script>
 	</head>
 	<body>
 		<div id="userTimeline">
@@ -38,11 +39,19 @@ foreach ($chat_posts_pre as $key => $value) {
 			<h1>Chat Luigi Bosco</h1>
 			<div id="chart"></div>
 		</div>
+		<div class="container">
+				<nav aria-label="Page navigation">
+					<ul class="pagination" id="pagination"></ul>
+				</nav>
+		</div>
 		<div id="tooltip" class="hidden">
 			<p id="little">fecha</p>
 		</div>
 		<script type="text/javascript">
+			var ejemplo;
 			var chat_posts_js=<?php echo(json_encode($chat_posts));?>;
+			console.log(chat_posts_js);
+			var chat_chunks=<?php echo sizeof($lista_archivos); ?>;
 			var formatDateTime=d3.time.format("%d/%m/%y, %H:%M").parse;
 			var formatDate=d3.time.format("%d/%m/%y").parse;
 			Object.keys(chat_posts_js).forEach(function(k){chat_posts_js[k].datetime=formatDateTime(
@@ -54,7 +63,8 @@ foreach ($chat_posts_pre as $key => $value) {
 			chat_posts_array=[];
 			Object.keys(chat_posts_js).forEach(function(k){chat_posts_array.push(chat_posts_js[k])});
 			var nested_data = d3.nest().key(function(d) { return d.date; }).entries(chat_posts_array);
-			console.log(nested_data);
+			// console.log(nested_data);
+			// console.log(<?php echo max(array_keys($lista_archivos)); ?>);
 
 			var viewportWidth  = document.documentElement.clientWidth
 				,viewportHeight = document.documentElement.clientHeight;
@@ -72,7 +82,8 @@ foreach ($chat_posts_pre as $key => $value) {
 				.style("width",width+"px")
 				.append("svg")
 				.attr("width",width)
-				.attr("height",height);
+				.attr("height",height)
+				;
 
 			var yscale = d3.scale.linear().domain([0, d3.max(data,function(d){return d.values.length;})]).range([height - margin,0 + margin]);
 			var xscale=d3.time.scale()
@@ -103,7 +114,7 @@ foreach ($chat_posts_pre as $key => $value) {
 			.y(function(d) { return yscale(d.values.length);});
 			//Y dibujarla
 			var lineGraph = svg.append("path")
-			.attr("d", lineFunction(nested_data))
+			.attr("d", lineFunction(data))
 			.attr("class","dataline")
 			.attr("stroke", "steelblue")
 			.attr("stroke-width", 2)
@@ -112,7 +123,7 @@ foreach ($chat_posts_pre as $key => $value) {
 			//Y los circulitos
 			var circles=svg.append("g");
 			circles.selectAll("circle")
-				.data(nested_data)
+				.data(data)
 				.enter()
 				.append("circle")
 				.attr("cx",function(d){return xscale(d.values[0].date);})
@@ -134,7 +145,7 @@ foreach ($chat_posts_pre as $key => $value) {
 				d3.select("#tooltip").selectAll("div")
 					.remove();
 				d3.select("#tooltip").selectAll("div")
-					.data(nested_data[findWithAttr(nested_data,'key',(d3.select(this).attr('id')).substr(1))].values)
+					.data(data[findWithAttr(data,'key',(d3.select(this).attr('id')).substr(1))].values)
 					.enter()
 					.append("div")
 					.attr("class","tuitText")
@@ -173,24 +184,73 @@ foreach ($chat_posts_pre as $key => $value) {
 			return "<i>"+chat_post.author+"</i>"+": "+chat_post.content;
 		}
 		</script>
+		<script type="text/javascript">
+			$(function () {
+				window.pagObj = $('#pagination').twbsPagination({
+					totalPages: chat_chunks,
+					visiblePages: 5,
+					startPage: chat_chunks,
+					initiateStartPageClick:false,
+					onPageClick: function (event, page) {
+						// console.info(page + ' (from options)');
+						$.post("./lib/retrieve_chat_chunk.php",
+							{
+								PAGE:page
+							},
+							function(data){
+								data=eval(data);
+								// console.log(data);
+								var formatDateTime=d3.time.format("%d/%m/%y, %H:%M").parse;
+								var formatDate=d3.time.format("%d/%m/%y").parse;
+								Object.keys(data).forEach(function(k){data[k].datetime=formatDateTime(
+									data[k].datetime
+									)});
+								Object.keys(data).forEach(function(k){data[k].date=formatDate(
+									data[k].date
+									)});
+								// console.log(data);
+								data_array=[];
+								Object.keys(data).forEach(function(k){data_array.push(data[k])});
+								var nested_data = d3.nest().key(function(d) { return d.date; }).entries(data_array);
+								console.log(nested_data);
+								timeline('#chart',nested_data,w,h);
+							}
+							)
+					}
+					,first:"Primero"
+					,prev:"Anterior"
+					,next:"Siguiente"
+					,last:"&Uacute;ltimo"
+				})
+				// .on('page', function (event, page) {
+				// 	console.info(page + ' (from event listening)');
+				// })
+				;
+			});
+		</script>
+		<script type="text/javascript">
+		function timeline_update(reference,data,width,height){
 
-				<style type="text/css">
+		}
+		</script>
+
+	<style type="text/css">
 		.yaxis path,.yaxis line,.xaxis path, .xaxis line {
-		    fill: none;
-		    shape-rendering: crispedges;
-		    stroke: #FEBD17;
+			fill: none;
+			shape-rendering: crispedges;
+			stroke: #FEBD17;
 		}
 		.yaxis text,.xaxis text {
-		    font-family: sans-serif;
-		    font-size: 8px;
-		    stroke:#7a7a7a;
+			font-family: sans-serif;
+			font-size: 8px;
+			stroke:#7a7a7a;
 		}
 		body {
-		    background: none repeat scroll 0 0 #222222;
-		    color: #FFFFFF;
-		    font-family: "Avenir Next",Avenir,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-		    line-height: 1.6;
-		    text-align: center;
+			background: none repeat scroll 0 0 #222222;
+			color: #FFFFFF;
+			font-family: "Avenir Next",Avenir,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+			line-height: 1.6;
+			text-align: center;
 		}
 
 		#tooltip.hidden {
@@ -217,20 +277,20 @@ foreach ($chat_posts_pre as $key => $value) {
 			box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 			/*pointer-events: none;*/
 			opacity: 0.8;
-		    overflow: auto;
+			overflow: auto;
 		}
 
 		#little {
-		    text-align: left;
-		    font-size: 0.8em;
-		    background-color: #8e8e8e;
+			text-align: left;
+			font-size: 0.8em;
+			background-color: #8e8e8e;
 		}
 
 		.tuitText {
-		    color: black;
-		    font-size: 0.8em;
-		    text-align: left;
-		    margin: 0px 0px 1px 0px;
-		    background-color: white;
+			color: black;
+			font-size: 0.8em;
+			text-align: left;
+			margin: 0px 0px 1px 0px;
+			background-color: white;
 		}
 		</style>
