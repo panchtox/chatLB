@@ -1,23 +1,22 @@
 <?php
 function get_chat_page_JSON($page,$lista_archivos){
 	$archivo=file_get_contents($lista_archivos[($page-1)]);
-	preg_match_all('#(\d+\/\d+\/\d+, \d+:\d+ - )(.*)#',$archivo,$match);
-	$chat_chunk=$match[0];
-
-	foreach ($chat_chunk as $key => $post) {
-		$re="#(\d+\/\d+\/\d+, \d+:\d+ - )#";
-		$chat_posts_pre[$key]=preg_split($re, $post, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+	$rows = explode("\n", $archivo);
+	$key=-1;
+	foreach ($rows as $row => $data) {
+		if (preg_match('#\d+\/\d+\/\d+, \d+:\d+ - #', $data,$fecha_hora)) {
+			$key++;
+			$chat_posts[$key]['datetime']=$fecha_hora[0];
+			$chat_posts[$key]['datetime']=str_replace(" - ", "", $chat_posts[$key]['datetime']);
+			$chat_posts[$key]['date']=preg_split("#\,\s#", $chat_posts[$key]['datetime'])[0];
+			$post_parts=preg_split("#\:\s#", preg_split('#\d+\/\d+\/\d+, \d+:\d+ - #', $data)[1]);
+			$chat_posts[$key]['author']=$post_parts[0];
+			$chat_posts[$key]['content']=$post_parts[1];
+		} else {
+			$chat_posts[$key]['content'].=" ".$data;
+		}
 	}
-
-	foreach ($chat_posts_pre as $key => $value) {
-		$chat_posts[$key]['datetime']=$chat_posts_pre[$key][0];
-		$chat_posts[$key]['datetime']=str_replace(" - ", "", $chat_posts[$key]['datetime']);
-		$chat_posts[$key]['date']=preg_split("#\,\s#", $chat_posts[$key]['datetime'])[0];
-		$post_parts=preg_split("#\:\s#", $chat_posts_pre[$key][1]);
-		$chat_posts[$key]['author']=$post_parts[0];
-		$chat_posts[$key]['content']=$post_parts[1];
-	}
-
+	// file_put_contents("./datos.txt", print_r($chat_posts));
 	return json_encode($chat_posts);
 }
 
