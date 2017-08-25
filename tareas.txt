@@ -1,0 +1,11 @@
+Pendientes
+Captar posts multiline en javascript
+
+
+Completos
+parsear archivos de chat para que sean menos en output
+Scrolling horizontal con ajax de nuevo historial
+	Vamos por paginación: dividimos las páginas en igual número de archivitos de chat generados inicialmente de acuerdo a los chunks. De acuerdo a eso mostrar los últimos con opción a ir al primero y al último.
+	El key a solicitar del array de chats será el mayor, por defecto pero siempre será generado como el max(key)-(max(key)-page). De este modo cuando page sea igual a max(key) valdrá 0 y traeremos el último.
+	La solución de http://esimakin.github.io/twbs-pagination/ parece sencilla
+Cambiar css de esimakin para mejorar el aspecto
