@@ -26,6 +26,7 @@ foreach ($chat_posts_pre as $key => $value) {
 	<head>
 		<title>Bolumetricas LG</title>
 		<meta charset="UTF-8">
+		<link rel="shortcut icon" type="image/png" href="./images/faviconlb.png"/>
 		<link href="styles/bootstrap.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="styles/lastHundred.css"/>
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
