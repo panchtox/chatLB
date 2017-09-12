@@ -1,0 +1,1 @@
+[{"word":"tailandia","freq":1},{"word":"mes","freq":1},{"word":"locura","freq":1},{"word":"impecable","freq":1},{"word":"lujo","freq":1},{"word":"cuento","freq":1},{"word":"juntemos","freq":1},{"word":"bancan","freq":1},{"word":"cosita","freq":1},{"word":"joda","freq":1},{"word":"sufrir","freq":1},{"word":"vida","freq":1},{"word":"jjajajajj","freq":1}]

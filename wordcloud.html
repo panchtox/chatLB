@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+	<head>
+		<title>word cloud</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="styles/lastHundred.css"/>
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script src="./lib/d3-cloud-master/build/d3.layout.cloud.js" charset="utf-8"></script>
+	</head>
+	<body>
+		<p>ejemplo word cloud</p>
+		<script type="text/javascript">
+			var fill = d3.scale.category20();
+			var dataset=[{"word":"jajaja","freq":255},{"word":"grande","freq":62},{"word":"querido","freq":59},{"word":"abrazo","freq":52},{"word":"bienvenido","freq":46},{"word":"jajajaja","freq":43},{"word":"sergio","freq":39},{"word":"gracias","freq":36},{"word":"diego","freq":34},{"word":"juanjo","freq":31},{"word":"buen\u00edsimo","freq":31},{"word":"pablo","freq":31},{"word":"mario","freq":26},{"word":"grupo","freq":26},{"word":"fer","freq":25},{"word":"vos","freq":22},{"word":"marcelo","freq":22},{"word":"estimados","freq":20},{"word":"hola","freq":19},{"word":"fabi\u00e1n","freq":19},{"word":"argentina","freq":17},{"word":"daniel","freq":17},{"word":"mejores","freq":16},{"word":"a\u00f1os","freq":16},{"word":"deseos","freq":16},{"word":"vida","freq":16},{"word":"veo","freq":15},{"word":"foto","freq":14},{"word":"enorme","freq":14},{"word":"marito","freq":14},{"word":"tanito","freq":14},{"word":"fuerza","freq":13},{"word":"tremendo","freq":13},{"word":"materia","freq":13},{"word":"amor","freq":13},{"word":"luis","freq":13},{"word":"sautua","freq":13},{"word":"augusto","freq":12},{"word":"mariano","freq":11},{"word":"tano","freq":11},{"word":"tema","freq":11},{"word":"boquita","freq":11},{"word":"seguro","freq":11},{"word":"nancy","freq":11},{"word":"luz","freq":11},{"word":"idea","freq":10},{"word":"risa","freq":10},{"word":"ciclo","freq":10},{"word":"reci\u00e9n","freq":10},{"word":"caso","freq":10}];
+
+		var layout = d3.layout.cloud()
+			// .data(danielc)
+			.size([1000, 500])
+			.words(dataset.map(function(d) {
+			  return {text: d.word, size: (d.freq), test: "haha"};
+			}))
+			.padding(5)
+			// .rotate(function() { return ~~(Math.random() * 2) * 90; })
+			.font("Impact")
+			.fontSize(function(d) { return d.size; })
+			.on("end", draw);
+
+		layout.start();
+
+		function draw(words) {
+		  d3.select("body").append("svg")
+			  .attr("width", layout.size()[0])
+			  .attr("height", layout.size()[1])
+			.append("g")
+			  .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+			.selectAll("text")
+			  .data(words)
+			.enter().append("text")
+			  .style("font-size", function(d) { return d.size + "px"; })
+			  .style("font-family", "Impact")
+			  .style("fill", function(d, i) { return fill(i); })
+			  .attr("text-anchor", "middle")
+			  .attr("transform", function(d) {
+				return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+			  })
+			  .text(function(d) { return d.text; });
+		}
+		</script>
+	</body>
+</html>

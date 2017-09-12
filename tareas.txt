@@ -1,6 +1,8 @@
 Pendientes
-Captar posts multiline en javascript
-
+El servicio de la info tarda. Pero se pueden dejar ya parseados los chats como array o json y se ahorra el parseo
+Generar parseo y servicio de mas largos
+Extremos
+Nubes de palabras
 
 Completos
 parsear archivos de chat para que sean menos en output
@@ -9,3 +11,4 @@ Scrolling horizontal con ajax de nuevo historial
 	El key a solicitar del array de chats será el mayor, por defecto pero siempre será generado como el max(key)-(max(key)-page). De este modo cuando page sea igual a max(key) valdrá 0 y traeremos el último.
 	La solución de http://esimakin.github.io/twbs-pagination/ parece sencilla
 Cambiar css de esimakin para mejorar el aspecto
+Captar posts multiline en javascript

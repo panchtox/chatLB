@@ -1,0 +1,1 @@
+[{"word":"compartir","freq":1},{"word":"fuerte","freq":1},{"word":"abrazos","freq":1},{"word":"conocerlos","freq":1},{"word":"agrado","freq":1},{"word":"mensaje","freq":1},{"word":"palabras","freq":1},{"word":"much\u00edsimas","freq":1}]

@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set("America/Argentina/Buenos_Aires");
+$replace_array = array(    'ú'=>'ú', 'á'=>'á','í'=>'í','ó'=>'ó','é'=>'é','ñ'=>'ñ');
 $chats_folder="./pruebas/output/";
 $lista_archivos=glob($chats_folder."*.txt");
 $archivo=file_get_contents($lista_archivos[max(array_keys($lista_archivos))]);
@@ -31,23 +32,49 @@ foreach ($rows as $row => $data) {
 		<script src="//code.jquery.com/jquery-2.0.3.min.js" type="text/javascript"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 		<script src="./lib/esimakin-twbs-pagination-9b6d211/jquery.twbsPagination.js" type="text/javascript"></script>
+		<script src="./lib/jqueryScrollTo/jquery.scrollTo.js"></script>
+		<script type="text/javascript" src="./lib/jQuery-One-Page-Nav-master/jquery.nav.js"></script>
+		<script src="./lib/d3-cloud-master/build/d3.layout.cloud.js" charset="utf-8"></script>
 	</head>
 	<body>
-		<div id="userTimeline">
-			<img src="./images/csi_logo03.png" style="width:50px;float:left">
+		<img src="./images/csi_logo03.png" style="width:50px;float:left">
 			<h1>Chat Luigi Bosco</h1>
+		<ul id="nav">
+			<li class="current"><a href="#wordcloud">Nube de palabras</a></li>
+			<li><a href="#chatTimeline">L&iacute;nea de tiempo</a></li>
+		</ul>
+		<div id="wordcloud">
+			<select name="author" onchange="pick_author_words(document.getElementsByName('author')[0].selectedOptions[0]);">
+			<option value="">-----------------</option>
+			<?php
+			$words_folder="./pruebas/words/";
+			$lista_archivos_words=glob($words_folder."*.txt");
+			foreach($lista_archivos_words as $key => $value){
+			echo '<option value="'.$key.'">'.htmlentities(strtr(str_replace(".txt", "", basename($value)), $replace_array)).'</option>';
+			}
+			?>
+		</select>
+		<div id="cloud"></div>
+		</div>
+		<div id="chatTimeline">
+			
 			<div id="chart"></div>
-		</div>
-		<div class="container">
-				<nav aria-label="Page navigation">
-					<ul class="pagination" id="pagination"></ul>
-				</nav>
-		</div>
-		<div id="tooltip" class="hidden">
-			<p id="little">fecha</p>
+		
+			<div class="container">
+					<nav aria-label="Page navigation">
+						<ul class="pagination" id="pagination"></ul>
+					</nav>
+			</div>
+			<div id="tooltip" class="hidden">
+				<p id="little">fecha</p>
+			</div>
 		</div>
 		<script type="text/javascript">
-			var ejemplo;
+		$(document).ready(function() {
+			$('#nav').onePageNav();
+		});
+		</script>
+		<script type="text/javascript">
 			var chat_posts_js=<?php echo(json_encode($chat_posts));?>;
 			console.log(chat_posts_js);
 			var chat_chunks=<?php echo sizeof($lista_archivos); ?>;
@@ -67,7 +94,7 @@ foreach ($rows as $row => $data) {
 
 			var viewportWidth  = document.documentElement.clientWidth
 				,viewportHeight = document.documentElement.clientHeight;
-			var h=viewportHeight*0.45, w=viewportWidth*0.98, margin=30;
+			var h=viewportHeight*0.60, w=viewportWidth*0.98, margin=30;
 			var tooltipHeight=viewportHeight/1.8,tooltipWidth=viewportWidth/3;
 
 			timeline('#chart',nested_data,w,h);
@@ -77,7 +104,7 @@ foreach ($rows as $row => $data) {
 	function timeline(reference,data,width,height){
 			d3.select(reference).selectAll("svg").remove();
 
-			var svg=d3.select(reference)
+			var svg1=d3.select(reference)
 				.style("width",width+"px")
 				.append("svg")
 				.attr("width",width)
@@ -94,10 +121,10 @@ foreach ($rows as $row => $data) {
 			.tickFormat(d3.time.format("%d-%m"))
 			;
 			var yaxis=d3.svg.axis().scale(yscale).orient("left").ticks(5);
-			svg.append("g").attr("class","xaxis")
+			svg1.append("g").attr("class","xaxis")
 			.attr("transform","translate(0,"+(height-margin)+")")
 			.call(xAxis);
-			svg.append("g").attr("class","yaxis")
+			svg1.append("g").attr("class","yaxis")
 			.attr("transform","translate("+margin+",0)")
 			.call(yaxis)
 			.append("text")
@@ -112,7 +139,7 @@ foreach ($rows as $row => $data) {
 			.x(function(d) { return xscale(d.values[0].date);})
 			.y(function(d) { return yscale(d.values.length);});
 			//Y dibujarla
-			var lineGraph = svg.append("path")
+			var lineGraph = svg1.append("path")
 			.attr("d", lineFunction(data))
 			.attr("class","dataline")
 			.attr("stroke", "steelblue")
@@ -120,7 +147,7 @@ foreach ($rows as $row => $data) {
 			.attr("fill", "none");
 
 			//Y los circulitos
-			var circles=svg.append("g");
+			var circles=svg1.append("g");
 			circles.selectAll("circle")
 				.data(data)
 				.enter()
@@ -135,8 +162,8 @@ foreach ($rows as $row => $data) {
 				.on("mouseover", function() {
 				d3.select(this).attr("r",5);
 				d3.select("#tooltip")
-					.style("left", calculateXtooltipPosition("svg",parseFloat(d3.select(this).attr('cx'))) + "px")
-					.style("top", parseFloat(d3.select(this).attr('cy'))-50+d3.select('svg')[0][0].parentNode.offsetTop + "px")
+					.style("left", calculateXtooltipPosition("#chart svg",parseFloat(d3.select(this).attr('cx'))) + "px")
+					.style("top", parseFloat(d3.select(this).attr('cy'))-50+d3.select('#chart svg')[0][0].parentNode.offsetTop + "px")
 					.style("max-height",tooltipHeight+"px")
 					.style("width",tooltipWidth+"px")
 					.classed("hidden", false);
@@ -155,7 +182,7 @@ foreach ($rows as $row => $data) {
 					d3.select(this).attr("r",3);
 				})
 				;
-		d3.select("svg").on("click",function(){d3.select("#tooltip").classed("hidden",true)});
+		d3.select("#chart svg").on("click",function(){d3.select("#tooltip").classed("hidden",true)});
 		}
 /***********************************************************************/
 
@@ -226,6 +253,53 @@ foreach ($rows as $row => $data) {
 				// })
 				;
 			});
+		</script>
+		<script type="text/javascript">
+			var fill = d3.scale.category20();
+			// var dataautor;
+			function pick_author_words(author){
+			console.log(author.value);
+			console.log(author.innerHTML);
+			var filename="./pruebas/words/"+author.innerHTML+".txt";
+			d3.json(filename,function(error,data){
+				console.log(data);
+				// dataautor=data;
+				drawcloud(data);
+			})
+		}
+		function drawcloud(dataset){
+			d3.select("#cloud").selectAll("svg").remove();
+		var layout = d3.layout.cloud()
+			.size([1000, 500])
+			.words(dataset.map(function(d) {
+			  return {text: d.word, size: (d.freq * (132/d3.max(dataset,function(d){return d.freq}))), test: "haha"};
+			}))
+			.padding(5)
+			.font("Impact")
+			.fontSize(function(d) { return d.size; })
+			.on("end", draw);
+
+		layout.start();
+
+		function draw(words) {
+		  d3.select("#cloud").append("svg")
+			  .attr("width", layout.size()[0])
+			  .attr("height", layout.size()[1])
+			.append("g")
+			  .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+			.selectAll("text")
+			  .data(words)
+			.enter().append("text")
+			  .style("font-size", function(d) { return d.size + "px"; })
+			  .style("font-family", "Impact")
+			  .style("fill", function(d, i) { return fill(i); })
+			  .attr("text-anchor", "middle")
+			  .attr("transform", function(d) {
+				return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+			  })
+			  .text(function(d) { return d.text; });
+		}
+	}
 		</script>
 		<script type="text/javascript">
 		function timeline_update(reference,data,width,height){

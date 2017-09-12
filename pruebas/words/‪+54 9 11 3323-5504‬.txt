@@ -1,0 +1,1 @@
+[{"word":"nc","freq":1},{"word":"qien","freq":1},{"word":"agregoo","freq":1},{"word":"acaa","freq":1},{"word":"nancy","freq":1},{"word":"soii","freq":1},{"word":"qe","freq":1},{"word":"estoii","freq":1},{"word":"colee","freq":1},{"word":"cntestoo","freq":1},{"word":"holaaa","freq":1}]

@@ -1,0 +1,1 @@
+[{"word":"reseteando","freq":1},{"word":"mundial","freq":1}]
